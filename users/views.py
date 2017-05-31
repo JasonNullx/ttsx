@@ -40,10 +40,13 @@ def register_handle(request):
 
         Users.objects.create(uname=uname, upass=md5_upass, email=email)
 
-        info = "注册成功!"
-        re_url = "/"
-        context = {'info': info, 're_url': re_url}
-        return render(request, 'users/redirect.html', context)
+        # info = "注册成功!"
+        # re_url = "/"
+        # context = {'info': info, 're_url': re_url}
+        # return render(request, 'users/redirect.html', context)
+
+        # 注册成功返回首页
+        return redirect('/')
 
 
 def login(request):
