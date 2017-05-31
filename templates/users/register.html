@@ -9,6 +9,8 @@
 	<script type="text/javascript" src="/static/js/register.js"></script>
 </head>
 <body>
+    {% extends 'base_notop.html' %}
+    {% block content %}
 	<div class="register_con">
 		<div class="l_con fl">
 			<a class="reg_logo"><img src="/static/images/logo02.png"></a>
@@ -22,7 +24,7 @@
 				<a href="#">登录</a>
 			</div>
 			<div class="reg_form clearfix">
-				<form action="/register_action/" method="POST">
+				<form action="{% url 'users:register_handle' %}" method="POST" id="reg_form">
                 {% csrf_token %}
 				<ul>
 					<li>
@@ -51,7 +53,7 @@
 						<span class="error_tip2">提示信息</span>
 					</li>
 					<li class="reg_sub">
-						<input type="submit" value="注 册">
+						<input  type="submit" value="注 册">
 					</li>
 				</ul>				
 				</form>
@@ -60,20 +62,7 @@
 		</div>
 
 	</div>
+    {% endblock %}
 
-	<div class="footer no-mp">
-		<div class="foot_link">
-			<a href="#">关于我们</a>
-			<span>|</span>
-			<a href="#">联系我们</a>
-			<span>|</span>
-			<a href="#">招聘人才</a>
-			<span>|</span>
-			<a href="#">友情链接</a>		
-		</div>
-		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
-		<p>电话：010-****888    京ICP备*******8号</p>
-	</div>
-	
 </body>
 </html>

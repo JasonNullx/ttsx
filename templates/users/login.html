@@ -3,12 +3,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<title>天天生鲜-登录</title>
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 </head>
 <body>
+    {% extends 'base_notop.html' %}
+    {% block content %}
 	<div class="login_top clearfix">
-		<a href="index.html" class="login_logo"><img src="images/logo02.png"></a>	
+		<a href="{% url 'dailyfresh:index' %}" class="login_logo"><img src="/static/images/logo02.png"></a>
 	</div>
 
 	<div class="login_form_bg">
@@ -21,7 +23,8 @@
 					<a href="#">立即注册</a>
 				</div>
 				<div class="form_input">
-					<form>
+					<form action="{% url 'users:login_handle' %}" method="POST">
+                        {% csrf_token %}
 						<input type="text" name="username" class="name_input" placeholder="请输入用户名">
 						<div class="user_error">输入错误</div>
 						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
@@ -37,20 +40,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="footer no-mp">
-		<div class="foot_link">
-			<a href="#">关于我们</a>
-			<span>|</span>
-			<a href="#">联系我们</a>
-			<span>|</span>
-			<a href="#">招聘人才</a>
-			<span>|</span>
-			<a href="#">友情链接</a>		
-		</div>
-		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
-		<p>电话：010-****888    京ICP备*******8号</p>
-	</div>
-	
+	{% endblock %}
 </body>
 </html>
