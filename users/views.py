@@ -12,41 +12,39 @@ def register(request):
 
 
 def register_handle(request):
-    # 获取post数据
-    post_data = request.POST
+    if request.method == 'POST':
+        # 获取post数据
+        post_data = request.POST
 
-    # 如果post没有数据，则跳回注册页
-    if not len(post_data):
-        return redirect('/users/register')
+        # 如果post没有数据，则跳回注册页
+        if not len(post_data):
+            return redirect('/register')
 
-    uname = post_data.get('username')
-    upass = post_data.get('pwd')
-    cpwd = post_data.get('cpwd')
-    email = post_data.get('email')
+        uname = post_data.get('username')
+        upass = post_data.get('pwd')
+        cpwd = post_data.get('cpwd')
+        email = post_data.get('email')
 
-    # 判断注册的用户是否存在
-    user_exist = Users.objects.filter(uname=uname)
-    if user_exist:
-        info = "用户已经存在!"
-        re_url = "/register"
-        context = {'info': info, 're_url': re_url}
-        return render(request, 'users/redirect.html', context)
+        # 判断注册的用户是否存在     ---> 回头可以改成ajax，就省去跳转到另一个页面再跳回来了
+        user_exist = Users.objects.filter(uname=uname)
+        if user_exist:
+            info = "用户已经存在!"
+            re_url = "/register"
+            context = {'info': info, 're_url': re_url}
+            return render(request, 'users/redirect.html', context)
 
-    # 若两次输入的密码一致，则添加至数据库
-    if upass == cpwd:
-        m = hashlib.md5()
-        m.update(upass)
-        md5_upass = m.hexdigest()
+        # 若两次输入的密码一致，则添加至数据库
+        if upass == cpwd:
+            m = hashlib.md5()
+            m.update(upass)
+            md5_upass = m.hexdigest()
 
-        Users.objects.create(uname=uname, upass=md5_upass, email=email)
+            Users.objects.create(uname=uname, upass=md5_upass, email=email)
 
-        # info = "注册成功!"
-        # re_url = "/"
-        # context = {'info': info, 're_url': re_url}
-        # return render(request, 'users/redirect.html', context)
-
-        # 注册成功返回首页
-        return redirect('/')
+            # 注册成功返回首页
+            return redirect('/')
+    else:
+        return redirect('/register')
 
 
 def login(request):
@@ -54,7 +52,38 @@ def login(request):
 
 
 def login_handle(request):
-    post_data = request.POST
+    if request.method == 'POST':
+        post_data = request.POST
+        uname = post_data.get('username')
+        upass = post_data.get('pwd')
+
+        # 如果post没有数据，则跳回login页
+        if not len(post_data):
+            return redirect('/login')
+
+        user_exist = Users.objects.filter(uname=uname)
+        if not user_exist:
+            info = "用户不存在!"
+            re_url = "/login"
+            context = {'info': info, 're_url': re_url}
+            return render(request, 'users/redirect.html', context)
+
+        m = hashlib.md5()
+        m.update(upass)
+        md5_upass = m.hexdigest()
+
+        if md5_upass == user_exist[0].upass:
+            request.session['user_id'] = user_exist[0].id
+            # 登录成功，跳转到主页
+            return redirect('/')
+        else:
+            # 密码错误的情况
+            info = "密码错误!"
+            re_url = "/login"
+            context = {'info': info, 're_url': re_url}
+            return render(request, 'users/redirect.html', context)
+    else:
+        return redirect('/login')
 
 
 def user_center(request):
