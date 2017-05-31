@@ -1,6 +1,6 @@
 # coding:utf-8
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from models import Users
 import hashlib
 
@@ -8,7 +8,8 @@ import hashlib
 
 
 def register(request):
-    return render(request, 'users/register.html')
+    context = {'title': '用户注册'}
+    return render(request, 'users/register.html', context)
 
 
 def register_handle(request):
@@ -26,12 +27,12 @@ def register_handle(request):
         email = post_data.get('email')
 
         # 判断注册的用户是否存在     ---> 回头可以改成ajax，就省去跳转到另一个页面再跳回来了
-        user_exist = Users.objects.filter(uname=uname)
-        if user_exist:
-            info = "用户已经存在!"
-            re_url = "/register"
-            context = {'info': info, 're_url': re_url}
-            return render(request, 'users/redirect.html', context)
+        # user_exist = Users.objects.filter(uname=uname)
+        # if user_exist:
+        #     info = "用户已经存在!"
+        #     re_url = "/register"
+        #     context = {'info': info, 're_url': re_url}
+        #     return render(request, 'users/redirect.html', context)
 
         # 若两次输入的密码一致，则添加至数据库
         if upass == cpwd:
@@ -41,14 +42,21 @@ def register_handle(request):
 
             Users.objects.create(uname=uname, upass=md5_upass, email=email)
 
-            # 注册成功返回首页
-            return redirect('/')
+            # 注册成功，跳转至登录界面
+            return redirect('/login')
     else:
         return redirect('/register')
 
 
+def register_exist(request):
+    uname = request.GET.get('uname')
+    count = Users.objects.filter(uname=uname).count()
+    return JsonResponse({'count': count})
+
+
 def login(request):
-    return render(request, 'users/login.html')
+    context = {'title': '用户登录'}
+    return render(request, 'users/login.html', context)
 
 
 def login_handle(request):
