@@ -26,14 +26,6 @@ def register_handle(request):
         cpwd = post_data.get('cpwd')
         email = post_data.get('email')
 
-        # 判断注册的用户是否存在     ---> 回头可以改成ajax，就省去跳转到另一个页面再跳回来了
-        # user_exist = Users.objects.filter(uname=uname)
-        # if user_exist:
-        #     info = "用户已经存在!"
-        #     re_url = "/register"
-        #     context = {'info': info, 're_url': re_url}
-        #     return render(request, 'users/redirect.html', context)
-
         # 若两次输入的密码一致，则添加至数据库
         if upass == cpwd:
             m = hashlib.md5()
