@@ -4,7 +4,6 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import Users
 import hashlib
 from user_verify import user_verify
-
 # Create your views here.
 
 
@@ -82,9 +81,10 @@ def login_handle(request):
         md5_upass = m.hexdigest()
 
         if md5_upass == user_exist[0].upass:
+            # 登录成功，会往服务器本地存储用户的session信息
             request.session['user_id'] = user_exist[0].id
             request.session['user_name'] = user_exist[0].uname
-            # 登录成功，进行跳转
+            # 进行跳转
             # 根据cookie中的url字段判断用户是从哪个页面跳到登录页面的，从而跳转那个页面
             url = request.COOKIES.get('url', '/')
             red = HttpResponseRedirect(url)
@@ -108,7 +108,15 @@ def logout(request):
 
 @user_verify
 def user_center_info(request):
-    context = {'active': 'info', 'title': '个人信息'}
+    user_id = request.session.get('user_id')
+    user_info = Users.objects.get(id=user_id)
+
+    context = {'active': 'info',
+               'title': '个人信息',
+               'user_name': user_info.uname,
+               'phone': user_info.phone,
+               'address': user_info.address,
+               }
     return render(request, 'users/user_center_info.html', context)
 
 
@@ -120,5 +128,34 @@ def user_center_order(request):
 
 @user_verify
 def user_center_site(request):
-    context = {'active': 'site', 'title': '收获地址'}
+    user_id = request.session.get('user_id')
+    user_info = Users.objects.get(id=user_id)
+
+    context = {'active': 'site',
+               'title': '收货地址',
+               'recipient': user_info.recipient,
+               'phone': user_info.phone,
+               'address': user_info.address,
+               }
     return render(request, 'users/user_center_site.html', context)
+
+
+@user_verify
+def update_address(request):
+    if request.method == "POST":
+        post_data = request.POST
+        recipient = post_data.get('recipient')
+        address = post_data.get('address')
+        phone = post_data.get('phone')
+        post_code = post_data.get('post_code')
+
+        user_id = request.session.get('user_id')
+        user_info = Users.objects.get(id=user_id)
+
+        user_info.recipient = recipient
+        user_info.address = address
+        user_info.phone = phone
+        user_info.post_code = post_code
+        user_info.save()
+
+    return redirect('/user_center_site')
