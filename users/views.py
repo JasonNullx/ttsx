@@ -82,6 +82,7 @@ def login_handle(request):
 
         if md5_upass == user_exist[0].upass:
             request.session['user_id'] = user_exist[0].id
+            request.session['username'] = user_exist[0].uname
             # 登录成功，跳转到主页
             return redirect('/')
         else:
@@ -95,15 +96,15 @@ def login_handle(request):
 
 
 def user_center_info(request):
-    context = {'active': 'info'}
+    context = {'active': 'info', 'title': '个人信息'}
     return render(request, 'users/user_center_info.html', context)
 
 
 def user_center_order(request):
-    context = {'active': 'order'}
+    context = {'active': 'order', 'title': '订单'}
     return render(request, 'users/user_center_order.html', context)
 
 
 def user_center_site(request):
-    context = {'active': 'site'}
+    context = {'active': 'site', 'title': '收获地址'}
     return render(request, 'users/user_center_site.html', context)

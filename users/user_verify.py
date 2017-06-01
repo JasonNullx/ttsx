@@ -1,15 +1,8 @@
 # coding:utf-8
-from django.shortcuts import render
-from django.http import HttpResponse
-from users.models import Users
-# Create your views here.
 
 
-# # 主页视图
-# @user_verify
-def index(request):
-    # 判断用户是否登录
-    context = {'title': '首页'}
+# 验证用户是否已经登录，如果已经登录，返回登录信息
+def user_verify():
     user_id = request.session.get('user_id', None)
     if user_id is None:
         context['logined'] = False
@@ -19,4 +12,3 @@ def index(request):
         context['logined'] = True
         context['uname'] = uname
         return render(request, 'index.html', context)
-
