@@ -1,8 +1,9 @@
 # coding:utf-8
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import Users
 import hashlib
+from user_verify import user_verify
 
 # Create your views here.
 
@@ -82,9 +83,13 @@ def login_handle(request):
 
         if md5_upass == user_exist[0].upass:
             request.session['user_id'] = user_exist[0].id
-            request.session['username'] = user_exist[0].uname
-            # 登录成功，跳转到主页
-            return redirect('/')
+            request.session['user_name'] = user_exist[0].uname
+            # 登录成功，进行跳转
+            # 根据cookie中的url字段判断用户是从哪个页面跳到登录页面的，从而跳转那个页面
+            url = request.COOKIES.get('url', '/')
+            red = HttpResponseRedirect(url)
+            red.set_cookie('url', '', max_age=-1)
+            return red
         else:
             # 密码错误的情况
             info = "密码错误!"
@@ -95,16 +100,25 @@ def login_handle(request):
         return redirect('/login')
 
 
+def logout(request):
+    request.session.flush()
+    red = HttpResponseRedirect('/')
+    return red
+
+
+@user_verify
 def user_center_info(request):
     context = {'active': 'info', 'title': '个人信息'}
     return render(request, 'users/user_center_info.html', context)
 
 
+@user_verify
 def user_center_order(request):
     context = {'active': 'order', 'title': '订单'}
     return render(request, 'users/user_center_order.html', context)
 
 
+@user_verify
 def user_center_site(request):
     context = {'active': 'site', 'title': '收获地址'}
     return render(request, 'users/user_center_site.html', context)
