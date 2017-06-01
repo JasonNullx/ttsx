@@ -1,14 +1,5 @@
-{% extends 'base.html' %}
-{% block content %}
-	<div class="main_con clearfix">
-		<div class="left_menu_con clearfix">
-			<h3>用户中心</h3>
-			<ul>
-				<li><a href="user_center_info.html" class="active">· 个人信息</a></li>
-				<li><a href="user_center_order.html">· 全部订单</a></li>
-				<li><a href="user_center_site.html">· 收货地址</a></li>
-			</ul>
-		</div>
+{% extends 'base_usercenter.html' %}
+{% block detail %}
 		<div class="right_content clearfix">
 				<div class="info_con clearfix">
 				<h3 class="common_title2">基本信息</h3>
@@ -23,7 +14,7 @@
 				<div class="has_view_list">
 					<ul class="goods_type_list clearfix">
 				<li>
-					<a href="detail.html"><img src="images/goods/goods003.jpg"></a>
+					<a href="detail.html"><img src="/static/images/goods/goods003.jpg"></a>
 					<h4><a href="detail.html">大兴大棚草莓</a></h4>
 					<div class="operate">
 						<span class="prize">￥16.80</span>
@@ -33,7 +24,7 @@
 				</li>
 
 				<li>
-					<a href="#"><img src="images/goods/goods004.jpg"></a>
+					<a href="#"><img src="/static/images/goods/goods004.jpg"></a>
 					<h4><a href="#">吐鲁番梨光杏</a></h4>
 					<div class="operate">
 						<span class="prize">￥5.50</span>
@@ -74,7 +65,6 @@
 			</ul>
 		</div>
 		</div>
-	</div>
 {% endblock %}
 
 

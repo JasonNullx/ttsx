@@ -94,5 +94,16 @@ def login_handle(request):
         return redirect('/login')
 
 
-def user_center(request):
-    pass
+def user_center_info(request):
+    context = {'active': 'info'}
+    return render(request, 'users/user_center_info.html', context)
+
+
+def user_center_order(request):
+    context = {'active': 'order'}
+    return render(request, 'users/user_center_order.html', context)
+
+
+def user_center_site(request):
+    context = {'active': 'site'}
+    return render(request, 'users/user_center_site.html', context)
