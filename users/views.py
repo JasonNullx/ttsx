@@ -47,7 +47,8 @@ def register_exist(request):
 
 
 def login(request):
-    context = {'title': '用户登录'}
+    uname = request.COOKIES.get('uname', '')
+    context = {'title': '用户登录', 'error_name': 0, 'error_pwd': 0, 'uname': uname}
     return render(request, 'users/login.html', context)
 
 
@@ -56,38 +57,53 @@ def login_handle(request):
         post_data = request.POST
         uname = post_data.get('username')
         upass = post_data.get('pwd')
+        rem = post_data.get('remember')
 
         # 如果post没有数据，则跳回login页
         if not len(post_data):
             return redirect('/login')
 
+        # 判断用户是否存在，不存在跳到登录页。前端虽然使用js进行了判断，这里再做一次是防止用户禁用了js
         user_exist = Users.objects.filter(uname=uname)
-        if not user_exist:
-            info = "用户不存在!"
-            re_url = "/login"
-            context = {'info': info, 're_url': re_url}
-            return render(request, 'users/redirect.html', context)
+        if user_exist:
+            # 对用户输入的密码进行md5加密
+            m = hashlib.md5()
+            m.update(upass)
+            md5_upass = m.hexdigest()
 
-        m = hashlib.md5()
-        m.update(upass)
-        md5_upass = m.hexdigest()
+            if md5_upass == user_exist[0].upass:
+                # 登录成功，会往服务器本地存储用户的session信息
+                request.session['user_id'] = user_exist[0].id
+                request.session['user_name'] = user_exist[0].uname
 
-        if md5_upass == user_exist[0].upass:
-            # 登录成功，会往服务器本地存储用户的session信息
-            request.session['user_id'] = user_exist[0].id
-            request.session['user_name'] = user_exist[0].uname
-            # 进行跳转
-            # 根据cookie中的url字段判断用户是从哪个页面跳到登录页面的，从而跳转那个页面
-            url = request.COOKIES.get('url', '/')
-            red = HttpResponseRedirect(url)
-            red.set_cookie('url', '', max_age=-1)
-            return red
-        else:
-            # 密码错误的情况
-            info = "密码错误!"
-            re_url = "/login"
-            context = {'info': info, 're_url': re_url}
-            return render(request, 'users/redirect.html', context)
+                # 根据cookie中的url字段判断用户是从哪个页面跳到登录页面的，从而跳转那个页面
+                url = request.COOKIES.get('url', '/')
+                red = HttpResponseRedirect(url)
+                red.set_cookie('url', '', max_age=-1)
+
+                # 判断是否记住用户名
+                if rem == '1':
+                    red.set_cookie('uname', uname)
+                else:
+                    red.set_cookie('uname', '', max_age=-1)
+
+                return red
+            else:  # 密码错误
+                context = {'title': '用户登录',
+                           'error_name': 0,
+                           'error_pwd': 1,
+                           'uname': uname,
+                           'upass': upass,
+                           }
+                return render(request, 'users/login.html', context)
+        else:  # 用户不存在
+            context = {'title': '用户登录',
+                       'error_name': 1,
+                       'error_pwd': 0,
+                       'uname': uname,
+                       'upass': upass,
+                       }
+            return render(request, 'users/login.html', context)
     else:
         return redirect('/login')
 
