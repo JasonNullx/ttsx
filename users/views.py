@@ -35,9 +35,9 @@ def register_handle(request):
             Users.objects.create(uname=uname, upass=md5_upass, email=email)
 
             # 注册成功，跳转至登录界面
-            return redirect('/login')
+            return redirect('/users/login')
     else:
-        return redirect('/register')
+        return redirect('/users/register')
 
 
 def register_exist(request):
@@ -61,7 +61,7 @@ def login_handle(request):
 
         # 如果post没有数据，则跳回login页
         if not len(post_data):
-            return redirect('/login')
+            return redirect('/users/login')
 
         # 判断用户是否存在，不存在跳到登录页。前端虽然使用js进行了判断，这里再做一次是防止用户禁用了js
         user_exist = Users.objects.filter(uname=uname)
@@ -105,7 +105,7 @@ def login_handle(request):
                        }
             return render(request, 'users/login.html', context)
     else:
-        return redirect('/login')
+        return redirect('/users/login')
 
 
 def logout(request):
@@ -166,4 +166,4 @@ def update_address(request):
         user_info.post_code = post_code
         user_info.save()
 
-    return redirect('/user_center_site')
+    return redirect('/users/user_center_site')
