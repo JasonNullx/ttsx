@@ -44,13 +44,13 @@
 		</div>
 	</div>
 
-    {% for i in click_new_list %}
+    {% for i in list_model %}
     <div class="list_model">
 		<div class="list_title clearfix">
-			<h3 class="fl" id="model01">{{ i.0 }}</h3>
+			<h3 class="fl" id="model01">{{ i.type_name }}</h3>
 			<div class="subtitle fl">
 				<span>|</span>
-                {% for click in i.1 %}
+                {% for click in i.click %}
 				<a href="#">{{ click.gtitle | truncatechars:15}}</a>
                 {% endfor %}
 			</div>
@@ -58,9 +58,9 @@
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/static/images/banner01.jpg"></div>
+			<div class="goods_banner fl"><img src="/static/images/banner{{ i.banner_id }}.jpg"></div>
 			<ul class="goods_list fl">
-                {% for new in i.2 %}
+                {% for new in i.new %}
 				<li>
 					<h4><a href="#">{{ new.gtitle }}</a></h4>
 					<a href="#"><img src="/static/{{ new.gpic }}"></a>
@@ -71,163 +71,6 @@
 		</div>
 	</div>
     {% endfor %}
-
-{#	<div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">新鲜水果</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type1_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner01.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type1_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-{##}
-{#    <div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">海鲜水产</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type2_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner02.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type2_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-{##}
-{#    <div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">猪牛羊肉</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type3_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner03.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type3_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-{##}
-{#    <div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">禽类蛋品</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type4_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner04.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type4_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-{##}
-{#    <div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">新鲜蔬菜</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type5_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner05.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type5_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-{##}
-{#    <div class="list_model">#}
-{#		<div class="list_title clearfix">#}
-{#			<h3 class="fl" id="model01">速冻食品</h3>#}
-{#			<div class="subtitle fl">#}
-{#				<span>|</span>#}
-{#                {% for click in type6_click %}#}
-{#				<a href="#">{{ click.gtitle | truncatechars:15}}</a>#}
-{#                {% endfor %}#}
-{#			</div>#}
-{#			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>#}
-{#		</div>#}
-{##}
-{#		<div class="goods_con clearfix">#}
-{#			<div class="goods_banner fl"><img src="/static/images/banner06.jpg"></div>#}
-{#			<ul class="goods_list fl">#}
-{#                {% for new in type6_new %}#}
-{#				<li>#}
-{#					<h4><a href="#">{{ new.gtitle }}</a></h4>#}
-{#					<a href="#"><img src="/static/{{ new.gpic }}"></a>#}
-{#					<div class="prize">¥ {{ new.gprice }}</div>#}
-{#				</li>#}
-{#                {% endfor %}#}
-{#			</ul>#}
-{#		</div>#}
-{#	</div>#}
-
 	<script type="text/javascript">
 		BCSlideshow('focuspic');
 		var oFruit = document.getElementById('fruit_more');
