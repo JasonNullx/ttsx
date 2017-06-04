@@ -2,24 +2,25 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from models import TypeInfo, GoodsInfo
-from django.db.models import Count, Max
+from django.core.paginator import Paginator
 # Create your views here.
 
 
 def index(request):
     list_model = []
-    type_count = TypeInfo.objects.aggregate(Count('id'))['id__count']
+    type_list = TypeInfo.objects.all()
 
-    for i in range(1, type_count+1):
+    for type in type_list:
         try:
-            click = GoodsInfo.objects.filter(gtype_id=i).order_by('-gclick')[0:3]
-            new = GoodsInfo.objects.filter(gtype_id=i).order_by('-id')[0:4]
-            type_name = TypeInfo.objects.get(id=i)
+            click = GoodsInfo.objects.filter(gtype_id=type.id).order_by('-gclick')[0:3]
+            new = GoodsInfo.objects.filter(gtype_id=type.id).order_by('-id')[0:4]
+            type_name = type.ttitle
         except:
             continue
+        banner_id = '0' + str(type.id) if type.id < 10 else str(type.id)
 
-        banner_id = '0' + str(i) if i < 10 else str(i)
         list_model.append({'type_name': type_name,
+                           'type_id': type.id,
                            'click': click,
                            'new': new,
                            'banner_id': banner_id,
@@ -29,10 +30,58 @@ def index(request):
     return render(request, 'goods/index.html', context)
 
 
-def goods_list(request):
-    return render(request, 'goods/list.html')
+def goods_list(request, tid, orderby, pindex,):
+    # 如果匹配不到则pindex设为1
+    if pindex == '':
+        pindex = 1
+    else:   # 注意正则匹配到的是字符串
+        pindex = int(pindex)
+
+    if orderby == '':
+        orderby = 1
+    else:
+        orderby = int(orderby)
+
+    # 获取某个类别下的所有商品
+    goods = GoodsInfo.objects.filter(gtype_id=tid)
+
+    # 排序
+    if orderby == 1:
+        goods = goods.order_by('-id')
+    elif orderby == 2:
+        goods = goods.order_by('gprice')
+    else:
+        goods = goods.order_by('-gclick')
+
+    # 获取某个类别下的最新商品
+    new_goods = goods.order_by('-id')[0:2]
+
+    # 生成paginator对象
+    paginator = Paginator(goods, 10)
+    # 获取页码列表
+    page_range = paginator.page_range
+    # 获取最大页码
+    num_pages = paginator.num_pages
+
+    # 如果pindex大于最大页数，则pindex就等于最大页数
+    if pindex > num_pages:
+        pindex = num_pages
+
+    # 获取某页的数据
+    page = paginator.page(pindex)
+
+    context = {'title': '列表页',
+               'page': page,
+               'new_goods': new_goods,
+               'tid': tid,
+               'page_range': page_range,
+               'num_pages': num_pages,
+               'orderby': orderby,
+               }
+    return render(request, 'goods/list.html', context)
 
 
 def goods_detail(request):
-    return render(request, 'goods/detail.html')
+    context = {'title': '详情页'}
+    return render(request, 'goods/detail.html', context)
 
