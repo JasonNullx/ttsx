@@ -12,7 +12,7 @@ def user_verify(target_func):
             return target_func(request)
         else:
             url = request.path
-            re = HttpResponseRedirect('/login')
+            re = HttpResponseRedirect('/users/login')
             re.set_cookie('url', url)
             return re
     return wrapper
