@@ -1,11 +1,12 @@
-{% extends 'goods/search_bar.html' %}
+{% extends 'goods/product_show.html' %}
 {% block head %}
 <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/static/js/slide.js"></script>
 {% endblock %}
 
+
 {% block index %}
-	<div class="navbar_con">
+    <div class="navbar_con">
 		<div class="navbar">
 			<h1 class="fl">全部商品分类</h1>
 			<ul class="navlist fl">
@@ -17,7 +18,6 @@
 			</ul>
 		</div>
 	</div>
-
 	<div class="center_con clearfix">
 		<ul class="subnav fl">
 			<li><a href="{% url 'dailyfresh:goods_list' 1 1 1%}" class="fruit">新鲜水果</a></li>
