@@ -17,7 +17,7 @@
                     </ul>
                 </div>
                 <ul class="navlist fl">
-                    <li><a href="">首页</a></li>
+                    <li><a href="{% url 'dailyfresh:index' %}">首页</a></li>
                     <li class="interval">|</li>
                     <li><a href="">手机生鲜</a></li>
                     <li class="interval">|</li>
@@ -43,8 +43,8 @@
                     <ul>
                         {% for item in new_goods %}
                         <li>
-                            <a href="#"><img src="/static/{{ item.gpic }}"></a>
-                            <h4><a href="#">{{ item.gtitle }}</a></h4>
+                            <a href="{% url 'dailyfresh:goods_detail' item.id %}"><img src="/static/{{ item.gpic }}"></a>
+                            <h4><a href="{% url 'dailyfresh:goods_detail' item.id %}">{{ item.gtitle }}</a></h4>
                             <div class="prize">￥{{ item.gprice }}</div>
                         </li>
                         {% endfor %}

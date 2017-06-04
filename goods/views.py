@@ -81,7 +81,14 @@ def goods_list(request, tid, orderby, pindex,):
     return render(request, 'goods/list.html', context)
 
 
-def goods_detail(request):
-    context = {'title': '详情页'}
+def goods_detail(request, gid):
+    good = GoodsInfo.objects.get(id=gid)
+
+    new_goods = GoodsInfo.objects.filter(gtype_id=good.gtype_id).order_by('-id')[0:2]
+
+    context = {'title': '详情页',
+               'new_goods': new_goods,
+               'good': good,
+               }
     return render(request, 'goods/detail.html', context)
 
