@@ -83,7 +83,8 @@ def goods_list(request, tid, orderby, pindex,):
 
 def goods_detail(request, gid):
     good = GoodsInfo.objects.get(id=gid)
-
+    good.gclick += 1
+    good.save()
     new_goods = GoodsInfo.objects.filter(gtype_id=good.gtype_id).order_by('-id')[0:2]
 
     context = {'title': '详情页',
