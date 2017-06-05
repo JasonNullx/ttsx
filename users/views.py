@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import Users
+from goods.models import GoodsInfo
 import hashlib
 from user_verify import user_verify
 # Create your views here.
@@ -116,6 +117,16 @@ def logout(request):
 
 @user_verify
 def user_center_info(request):
+    # 查询最近浏览商品
+    browsed_obj_list = []
+    if request.COOKIES.has_key('browsed'):
+        browsed_list = request.COOKIES['browsed'].split('/')
+        # browsed_obj_list = GoodsInfo.objects.filter(id__in=browsed_list)
+        # 为了保证最近浏览商品的显示顺序和cookie里的记录一致，所以使用如下方式而没有采用如上方式
+        for i in browsed_list:
+            browsed_obj_list.append(GoodsInfo.objects.get(id=int(i)))
+
+    # 查询用户信息
     user_id = request.session.get('user_id')
     user_info = Users.objects.get(id=user_id)
 
@@ -124,6 +135,7 @@ def user_center_info(request):
                'user_name': user_info.uname,
                'phone': user_info.phone,
                'address': user_info.address,
+               'browsed_obj_list': browsed_obj_list,
                }
     return render(request, 'users/user_center_info.html', context)
 

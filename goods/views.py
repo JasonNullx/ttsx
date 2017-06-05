@@ -1,5 +1,5 @@
 # coding:utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from models import TypeInfo, GoodsInfo
 from django.core.paginator import Paginator
@@ -82,14 +82,45 @@ def goods_list(request, tid, orderby, pindex,):
 
 
 def goods_detail(request, gid):
-    good = GoodsInfo.objects.get(id=gid)
+    # 获取商品信息
+    good = GoodsInfo.objects.filter(id=gid)
+    # 如果gid不存在，则跳到首页
+    if not good:
+        return redirect('/')
+
+    good = good[0]
+    # 商品点击量+1
     good.gclick += 1
     good.save()
+
+    # 获取该商品所属类别下的最新商品
     new_goods = GoodsInfo.objects.filter(gtype_id=good.gtype_id).order_by('-id')[0:2]
 
+    # 上下文
     context = {'title': '详情页',
                'new_goods': new_goods,
                'good': good,
                }
-    return render(request, 'goods/detail.html', context)
+
+    # 使用cookie记录用户最近浏览
+    response = render(request, 'goods/detail.html', context)
+    if request.COOKIES.has_key('browsed'):
+        browsed = request.COOKIES['browsed']    # cookie: browsed=100/120/30
+        browsed_list = browsed.split('/')       # ['100', '120', '30']
+
+        # 如果已浏览列表里有当前访问的商品id，则删除原来的id
+        if gid in browsed_list:
+            browsed_list.remove(gid)
+        browsed_list.insert(0, gid)
+
+        if len(browsed_list) > 5:
+            browsed_list.pop()
+
+        browsed_list = '/'.join(browsed_list)
+        response.set_cookie('browsed', browsed_list)
+
+    else:
+        response.set_cookie('browsed', gid)
+
+    return response
 
