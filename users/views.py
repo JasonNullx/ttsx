@@ -78,9 +78,9 @@ def login_handle(request):
                 request.session['user_name'] = user_exist[0].uname
 
                 # 根据cookie中的url字段判断用户是从哪个页面跳到登录页面的，从而跳转那个页面
-                url = request.COOKIES.get('url', '/')
-                red = HttpResponseRedirect(url)
-                red.set_cookie('url', '', max_age=-1)
+                url = request.COOKIES.get('red_url', '/')
+                red = redirect(url)
+                red.set_cookie('red_url', '', max_age=-1)
 
                 # 判断是否记住用户名
                 if rem == '1':

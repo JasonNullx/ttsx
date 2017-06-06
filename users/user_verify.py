@@ -11,8 +11,5 @@ def user_verify(target_func):
         if request.session.has_key('user_id'):
             return target_func(request)
         else:
-            url = request.path
-            re = HttpResponseRedirect('/users/login')
-            re.set_cookie('url', url)
-            return re
+            return redirect('/users/login')
     return wrapper
