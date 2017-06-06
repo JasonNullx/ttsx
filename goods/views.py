@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from models import TypeInfo, GoodsInfo
+from cart.models import *
 from django.core.paginator import Paginator
 # Create your views here.
 
@@ -26,7 +27,10 @@ def index(request):
                            'banner_id': banner_id,
                            })
 
-    context = {'title': '首页', 'list_model': list_model}
+    context = {'title': '首页',
+               'list_model': list_model,
+               'cart_count': cart_count(request),
+               }
     return render(request, 'goods/index.html', context)
 
 
@@ -77,6 +81,7 @@ def goods_list(request, tid, orderby, pindex,):
                'page_range': page_range,
                'num_pages': num_pages,
                'orderby': orderby,
+               'cart_count': cart_count(request),
                }
     return render(request, 'goods/list.html', context)
 
@@ -100,6 +105,7 @@ def goods_detail(request, gid):
     context = {'title': '详情页',
                'new_goods': new_goods,
                'good': good,
+               'cart_count': cart_count(request),
                }
 
     # 使用cookie记录用户最近浏览
@@ -124,3 +130,10 @@ def goods_detail(request, gid):
 
     return response
 
+
+# 计算购物车数量的函数
+def cart_count(request):
+    if request.session.has_key('user_id'):
+        return CartInfo.objects.filter(user_id=request.session['user_id']).count()
+    else:
+        return 0

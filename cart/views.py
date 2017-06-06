@@ -1,12 +1,36 @@
 # coding:utf-8
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from users.user_verify import user_verify
+from models import CartInfo
 # Create your views here.
 
 
 @user_verify
-def cart(request):
+def add(request, gid, count):
+    carts = CartInfo.objects.filter(goods_id=gid).filter(user_id=request.session['user_id'])
+    # 如果添加的商品已经在用户的购物车，则只要增加该商品的数量即可，不用再增加一条记录了
+    if len(carts) == 0:
+        cart = CartInfo()
+        cart.goods_id = int(gid)
+        cart.user_id = request.session['user_id']
+        cart.count = int(count)
+        cart.save()
+    else:
+        cart = carts[0]
+        cart.count += int(count)
+        cart.save()
+
+    # 判断是否是ajax请求，如果是ajax请求，则返回json对象
+    if request.is_ajax():
+        # 查询用户购物车中的商品数量
+        show_count = CartInfo.objects.filter(user_id=request.session['user_id']).count()
+        return JsonResponse({'count': show_count, 'is_login': 1})
+    else:
+        return redirect('/cart/cart_list/')
+
+
+@user_verify
+def cart_list(request):
     context = {'title': '购物车'}
     return render(request, 'cart/cart.html', context)
-
-

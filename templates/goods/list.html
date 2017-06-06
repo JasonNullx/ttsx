@@ -15,7 +15,7 @@
 					<div class="operate">
 						<span class="prize">￥{{ item.gprice }}</span>
 						<span class="unit">{{ item.gprice }}/{{ item.gunit }}</span>
-						<a href="#" class="add_goods" title="加入购物车"></a>
+						<a href="{% url 'cart:add' item.id 1 %}" class="add_goods" title="加入购物车"></a>
 					</div>
 				</li>
                 {% endfor %}
