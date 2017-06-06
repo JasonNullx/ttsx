@@ -27,10 +27,14 @@ def add(request, gid, count):
         show_count = CartInfo.objects.filter(user_id=request.session['user_id']).count()
         return JsonResponse({'count': show_count, 'is_login': 1})
     else:
-        return redirect('/cart/cart_list/')
+        return redirect('/cart/')
 
 
 @user_verify
 def cart_list(request):
-    context = {'title': '购物车'}
+    cart_li = CartInfo.objects.filter(user_id=request.session['user_id'])
+    context = {'title': '购物车',
+               'page_name': 1,
+               'cart_li': cart_li,
+               }
     return render(request, 'cart/cart.html', context)

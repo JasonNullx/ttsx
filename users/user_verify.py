@@ -1,7 +1,6 @@
 # coding:utf-8
 from django.shortcuts import redirect
 from django.http import JsonResponse
-from django.http import HttpResponseRedirect
 
 
 # 在一些需要登录的模块 验证用户是否已经登录，如果已经登录，返回登录信息, 如果没有登录，则跳到登录页面

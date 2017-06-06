@@ -1,6 +1,27 @@
 {% extends 'users/base_center.html' %}
+{% block head %}
+<script>
+$(function () {
+   //统计个数
+    count = $('.cart_list_td').length;
+    $('.total_count em').text(count);
+    $('.settlements .col03 b').text(count);
+    //计算小计与总计
+    total = 0;
+    $('.cart_list_td').each(function () {
+        price = parseFloat($(this).children('.col05').children('em').text());
+        count = $(this).find('.num_show').val();
+        total1 = price*count;
+        $(this).children('.col07').text(total1.toFixed(2)+'元');
+        total += total1;
+    });
+    $('.settlements .col03 em').text(total.toFixed(2));
+});
+</script>
+{% endblock %}
+
 {% block cart %}
-	<div class="total_count">全部商品<em>2</em>件</div>	
+	<div class="total_count">全部商品<em>2</em>件</div>
 	<ul class="cart_list_th clearfix">
 		<li class="col01">商品名称</li>
 		<li class="col02">商品单位</li>
@@ -9,40 +30,26 @@
 		<li class="col05">小计</li>
 		<li class="col06">操作</li>
 	</ul>
+    {% for cart in cart_li %}
 	<ul class="cart_list_td clearfix">
 		<li class="col01"><input type="checkbox" name="" checked></li>
-		<li class="col02"><img src="/static/goods/goods012.jpg"></li>
-		<li class="col03">奇异果<br><em>25.80元/500g</em></li>
-		<li class="col04">500g</li>
-		<li class="col05">25.80元</li>
+		<li class="col02"><img src="/static/{{ cart.goods.gpic }}"></li>
+		<li class="col03">{{ cart.goods.gtitle }}<br>库存<em>{{ cart.goods.gkucun }}</em></li>
+		<li class="col04">{{ cart.goods.gunit }}</li>
+		<li class="col05"><em>{{ cart.goods.gprice }}</em>元</li>
 		<li class="col06">
 			<div class="num_add">
 				<a href="javascript:;" class="add fl">+</a>
-				<input type="text" class="num_show fl" value="1">	
+				<input type="text" class="num_show fl" value="{{ cart.count }}">
 				<a href="javascript:;" class="minus fl">-</a>	
 			</div>
 		</li>
 		<li class="col07">25.80元</li>
-		<li class="col08"><a href="javascript:;">删除</a></li>
+		<li class="col08"><a href="javascript:del{{ cart.id }};">删除</a></li>
 	</ul>
-
-	<ul class="cart_list_td clearfix">
-		<li class="col01"><input type="checkbox" name="" checked></li>
-		<li class="col02"><img src="/static/goods/goods003.jpg"></li>
-		<li class="col03">大兴大棚草莓<br><em>16.80元/500g</em></li>
-		<li class="col04">500g</li>
-		<li class="col05">16.80元</li>
-		<li class="col06">
-			<div class="num_add">
-				<a href="javascript:;" class="add fl">+</a>
-				<input type="text" class="num_show fl" value="1">	
-				<a href="javascript:;" class="minus fl">-</a>	
-			</div>
-		</li>
-		<li class="col07">16.80元</li>
-		<li class="col08"><a href="javascript:;">删除</a></li>
-	</ul>
-	
+    {% empty %}
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂未添加商品</b>
+    {% endfor %}
 
 	<ul class="settlements">
 		<li class="col01"><input type="checkbox" name="" checked=""></li>
