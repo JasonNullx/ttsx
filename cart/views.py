@@ -38,3 +38,22 @@ def cart_list(request):
                'cart_li': cart_li,
                }
     return render(request, 'cart/cart.html', context)
+
+
+def cart_del(request):
+    cid = int(request.GET['id'])
+    cart_item = CartInfo.objects.filter(id=cid)
+    is_del = 0
+    if cart_item:
+        try:
+            cart_item.delete()
+            is_del = 1
+        except:
+            is_del = 0
+
+    return JsonResponse({'is_del': is_del})
+
+
+
+
+
