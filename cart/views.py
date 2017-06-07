@@ -43,7 +43,8 @@ def cart_list(request):
 @user_verify
 def cart_del(request):
     cid = int(request.GET['id'])
-    cart_item = CartInfo.objects.filter(id=cid)
+    # 注意要指定user_id，否则用户可以删除其他用户的购物车
+    cart_item = CartInfo.objects.filter(id=cid).filter(user_id=request.session['user_id'])
     is_del = 0
     if cart_item:
         try:
