@@ -28,8 +28,10 @@ function calc_total () {
 function cart_del(cid){
     if(confirm('确定要删除吗？')){
         $.get('{% url 'cart:cart_del' %}', {'id':cid}, function (data) {
-        $('#'+cid).remove();
-        calc_total();
+            if(data.is_del == 1){
+                $('#'+cid).remove();
+                calc_total();
+            }
     });
     }
 
