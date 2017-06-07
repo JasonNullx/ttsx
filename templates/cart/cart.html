@@ -1,6 +1,7 @@
 {% extends 'users/base_center.html' %}
 {% block head %}
 <script>
+//统计功能
 function calc_total () {
         //统计个数
         count = $('.cart_list_td').length;
@@ -23,11 +24,22 @@ function calc_total () {
         $('.settlements .col03 em').text(total.toFixed(2));
 }
 
+//删除功能
 function cart_del(cid){
-    $.get('{% url 'cart:cart_del' %}', {'id':cid}, function (data) {
+    if(confirm('确定要删除吗？')){
+        $.get('{% url 'cart:cart_del' %}', {'id':cid}, function (data) {
         $('#'+cid).remove();
         calc_total();
     });
+    }
+
+}
+
+//购物车商品数量发生改变时，使用ajax同步数据库
+function count_change(id, count){
+    $.get('{% url 'cart:count_change' %}', {'id': id, 'count': count}, function(data){
+        //
+    })
 }
 
 $(function () {
@@ -48,8 +60,64 @@ $(function () {
             $('#checkall').prop('checked', true);
         }
         calc_total();
-    })
+    });
+
+    //数量改变
+    //失去焦点
+    $('.num_show').blur(function () {
+        //是否是数字
+        if(isNaN($(this).val())){
+            $(this).val(1);
+        }
+        //是否非负
+        if(parseInt($(this).val()) < 1){
+            $(this).val(1);
+        }
+        //是否超过库存
+        if(parseInt($(this).val()) > parseInt($('.col03 em').html())){
+            $(this).val($('.col03 em').html());
+        }
+
+        calc_total();
+
+        count = $(this).val();
+        id = $(this).parents('.cart_list_td').prop('id');
+        //console.log(count+'...'+id)
+        count_change(id, count)
+    });
+    //+
+    $('.add').click(function () {
+        //是否超过库存
+        if(parseInt($(this).next().val()) < parseInt($('.col03 em').html())){
+            $(this).next().val(parseInt($(this).next().val())+1);
+            calc_total();
+
+            count = $(this).next().val();
+            id = $(this).parents('.cart_list_td').prop('id');
+            //console.log(count+'...'+id)
+            count_change(id, count)
+        }
+
+    });
+    //-
+    $('.minus').click(function () {
+        count = parseInt($(this).prev().val())-1;
+        if(count<=1){
+            $(this).prev().val(1);
+        }else{
+            $(this).prev().val(count);
+        }
+        calc_total();
+
+        count = $(this).prev().val();
+        id = $(this).parents('.cart_list_td').prop('id');
+        //console.log(count+'...'+id)
+        count_change(id, count)
+    });
 })
+
+
+
 </script>
 {% endblock %}
 

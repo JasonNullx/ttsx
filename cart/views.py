@@ -40,6 +40,7 @@ def cart_list(request):
     return render(request, 'cart/cart.html', context)
 
 
+@user_verify
 def cart_del(request):
     cid = int(request.GET['id'])
     cart_item = CartInfo.objects.filter(id=cid)
@@ -54,6 +55,26 @@ def cart_del(request):
     return JsonResponse({'is_del': is_del})
 
 
+@user_verify
+def count_change(request):
+    cid = request.GET['id']
+    count = int(request.GET['count'])
+    is_change = 0
+
+    cart = CartInfo.objects.filter(id=cid)
+
+    if cart:
+        cart = cart[0]
+        if count > cart.goods.gkucun:   # 输入的数量大于库存
+            cart.count = cart.goods.gkucun
+            cart.save()
+        else:
+            cart.count = count
+            cart.save()
+
+        is_change = 1
+
+    return JsonResponse({'is_change': is_change})
 
 
 
