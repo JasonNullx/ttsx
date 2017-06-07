@@ -14,11 +14,21 @@ def add(request, gid, count):
         cart = CartInfo()
         cart.goods_id = int(gid)
         cart.user_id = request.session['user_id']
-        cart.count = int(count)
-        cart.save()
+
+        # 判断是否超过库存
+        if int(count) > cart.goods.gkucun:
+            cart.count = cart.goods.gkucun
+            cart.save()
+        else:
+            cart.count = int(count)
+            cart.save()
     else:
         cart = carts[0]
+
         cart.count += int(count)
+        if cart.count > cart.goods.gkucun:
+            cart.count = cart.goods.gkucun
+
         cart.save()
 
     # 判断是否是ajax请求，如果是ajax请求，则返回json对象
