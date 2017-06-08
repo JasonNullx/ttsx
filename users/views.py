@@ -70,7 +70,7 @@ def login_handle(request):
         if not len(post_data):
             return redirect('/users/login')
 
-        # 判断用户是否存在，不存在跳到登录页。前端虽然使用js进行了判断，这里再做一次是防止用户禁用了js
+        # 判断用户是否存在，不存在跳到登录页。前端虽然使用js进行了判断，这里再做一次是防止用户跳过js
         user_exist = Users.objects.filter(uname=uname)
         if user_exist:
             # 对用户输入的密码进行md5加密
