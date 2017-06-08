@@ -1,7 +1,19 @@
 {% extends 'users/base_center.html' %}
 {% block head %}
 <script>
-
+$(function () {
+    total = 0;
+    $('.goods_list_td').each(function () {
+        price = parseFloat($(this).children('.col05').text());
+        count = parseInt($(this).children('.col06').text());
+        total1 = price*count;
+        total += total1;
+        $(this).children('.col07').text(total1.toFixed(2)+'元');
+    });
+    $('.total_goods_count b').text(total.toFixed(2)+'元');
+    $('.total_goods_count em').text($('.goods_list_td').length);
+    $('.total_pay b').text((total+10).toFixed(2)+'元');
+});
 </script>
 {% endblock %}
 {% block order %}
