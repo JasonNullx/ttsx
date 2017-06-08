@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import Users
 from goods.models import GoodsInfo
+from order.models import OrderInfo, OrderDetailInfo
 import hashlib
 from user_verify import user_verify
 # Create your views here.
@@ -142,7 +143,11 @@ def user_center_info(request):
 
 @user_verify
 def user_center_order(request):
-    context = {'active': 'order', 'title': '订单'}
+    order_info = OrderInfo.objects.filter(user_id=request.session['user_id']).order_by('-odate')
+    context = {'active': 'order',
+               'title': '订单',
+               'order_info': order_info,
+               }
     return render(request, 'users/user_center_order.html', context)
 
 

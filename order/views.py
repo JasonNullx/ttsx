@@ -44,6 +44,9 @@ def order_list(request):
 def order_sub(request):
     cart_id_list = request.POST.getlist('cart_id')
     oaddress = request.POST.get('address')
+    if not cart_id_list or not oaddress:
+        return redirect('/cart/')
+
     now = datetime.now()
     user_id = request.session['user_id']
     oid = '%s%d' % (now.strftime('%Y%m%d%H%M%S'), user_id)
