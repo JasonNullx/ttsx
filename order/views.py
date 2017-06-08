@@ -102,3 +102,12 @@ def order_sub(request):
         transaction.savepoint_rollback(sid)
         return redirect('/cart/')
 
+
+def pay_order(request, oid):
+    order = OrderInfo.objects.filter(oid=oid)
+    if order:
+        order = order[0]
+        order.oIsPay = True
+        order.save()
+
+    return redirect('/users/user_center_order/')

@@ -5,4 +5,5 @@ import views
 urlpatterns = [
     url(r'^$', views.order_list, name='order_list'),
     url(r'^order_sub$', views.order_sub, name='order_sub'),
+    url(r'^pay_order(\d+)$', views.pay_order, name="pay_order"),
 ]

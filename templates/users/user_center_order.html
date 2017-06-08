@@ -37,9 +37,9 @@
 							<td width="15%">{{ order.ototal }}元</td>
 							<td width="15%">{% if order.oIsPay == 0 %}待付款{% else %}已付款{% endif %}</td>
                             {% if order.oIsPay == 0 %}
-							<td width="15%"><a href="#" class="oper_btn">去付款</a></td>
+							<td width="15%"><a href="{% url 'order:pay_order' order.oid %}" class="oper_btn">去付款</a></td>
                             {% else %}
-                            <td width="15%"><a href="#" class="oper_btn">待付款</a></td>
+                            <td width="15%"><a href="#" class="oper_btn">查看物流</a></td>
                             {% endif %}
 						</tr>
 					</tbody>

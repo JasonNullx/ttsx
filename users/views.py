@@ -6,6 +6,7 @@ from goods.models import GoodsInfo
 from order.models import OrderInfo, OrderDetailInfo
 import hashlib
 from user_verify import user_verify
+from django.core.paginator import Paginator
 # Create your views here.
 
 
