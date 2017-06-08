@@ -13,8 +13,8 @@ def index(request):
 
     for type in type_list:
         try:
-            click = GoodsInfo.objects.filter(gtype_id=type.id).order_by('-gclick')[0:3]
-            new = GoodsInfo.objects.filter(gtype_id=type.id).order_by('-id')[0:4]
+            click = GoodsInfo.objects.filter(gtype_id=type.id).filter(gkucun__gt=0).order_by('-gclick')[0:3]
+            new = GoodsInfo.objects.filter(gtype_id=type.id).filter(gkucun__gt=0).order_by('-id')[0:4]
             type_name = type.ttitle
         except:
             continue
@@ -47,7 +47,7 @@ def goods_list(request, tid, orderby, pindex,):
         orderby = int(orderby)
 
     # 获取某个类别下的所有商品
-    goods = GoodsInfo.objects.filter(gtype_id=tid)
+    goods = GoodsInfo.objects.filter(gtype_id=tid).filter(gkucun__gt=0)
 
     # 排序
     if orderby == 1:
@@ -88,7 +88,7 @@ def goods_list(request, tid, orderby, pindex,):
 
 def goods_detail(request, gid):
     # 获取商品信息
-    good = GoodsInfo.objects.filter(id=gid)
+    good = GoodsInfo.objects.filter(id=gid).filter(gkucun__gt=0)
     # 如果gid不存在，则跳到首页
     if not good:
         return redirect('/')
@@ -99,7 +99,7 @@ def goods_detail(request, gid):
     good.save()
 
     # 获取该商品所属类别下的最新商品
-    new_goods = GoodsInfo.objects.filter(gtype_id=good.gtype_id).order_by('-id')[0:2]
+    new_goods = GoodsInfo.objects.filter(gtype_id=good.gtype_id).filter(gkucun__gt=0).order_by('-id')[0:2]
 
     # 上下文
     context = {'title': '详情页',
