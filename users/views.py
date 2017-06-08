@@ -22,12 +22,16 @@ def register_handle(request):
 
         # 如果post没有数据，则跳回注册页
         if not len(post_data):
-            return redirect('/register')
+            return redirect('/users/register')
 
         uname = post_data.get('username')
         upass = post_data.get('pwd')
         cpwd = post_data.get('cpwd')
         email = post_data.get('email')
+
+        # 判断用户名是否存在
+        if Users.objects.filter(uname=uname):
+            return redirect('/users/register')
 
         # 若两次输入的密码一致，则添加至数据库
         if upass == cpwd:
