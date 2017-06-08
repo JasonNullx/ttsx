@@ -116,6 +116,13 @@ $(function () {
         //console.log(count+'...'+id)
         count_change(id, count)
     });
+
+    //没有商品不让提交
+    $('#go_pay').submit(function () {
+        if($('.cart_list_td').length == 0){
+            return false
+        }
+    })
 })
 
 
@@ -133,7 +140,7 @@ $(function () {
 		<li class="col05">小计</li>
 		<li class="col06">操作</li>
 	</ul>
-    <form method="get" action="{% url 'order:order_list' %}">
+    <form method="get" action="{% url 'order:order_list' %}" id="go_pay">
         {% for cart in cart_li %}
         <ul class="cart_list_td clearfix" id="{{ cart.id }}">
             <li class="col01"><input type="checkbox" name="cart_id" checked="" value="{{ cart.id }}"></li>
