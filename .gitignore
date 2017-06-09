@@ -102,3 +102,4 @@ ENV/
 
 .idea/
 /django_blog/.idea/
+uwsgi*
